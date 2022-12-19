@@ -26,13 +26,6 @@ type BStruct struct {
 	} `json:"params"`
 }
 
-type RPCResponse struct {
-	JSONRPC string      `json:"jsonrpc"`
-	Result  interface{} `json:"result,omitempty"`
-	//Error   *RPCError   `json:"error,omitempty"`
-	ID uint `json:"id"`
-}
-
 type BodyResponse struct {
 	Jsonrpc float64 `json:"jsonrpc"`
 	Result  string  `json:"result"`
@@ -57,7 +50,10 @@ func doSomething(rw http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatalf("Error happened in JSON marshal. Err: %s", err)
 	}
-	rw.Write(jsonResp)
+	_, err = rw.Write(jsonResp)
+	if err != nil {
+		log.Printf("Write failed: %v", err)
+	}
 }
 
 func startServer(username string) string {
